@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import ru.itsjava.domain.Faculty;
 import ru.itsjava.domain.Student;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,7 +16,7 @@ public class StudentJdbcDaoImplTest {
     private static final String DEFAULT_NAME = "Ivanov 2";
     private static final int DEFAULT_AGE = 100;
     private static final long FIRST_ID = 1L;
-    private static final long NEW_ID = 3L;
+    public static final Faculty DEFAULT_FACULTY = new Faculty(1L, "Android Development");
 
     @Autowired
     private StudentDao studentDao;
@@ -29,7 +30,7 @@ public class StudentJdbcDaoImplTest {
 
     @Test
     public void shouldHaveCorrectMethodInsert() {
-        Student expectedStudent = new Student(DEFAULT_NAME, DEFAULT_AGE);
+        Student expectedStudent = new Student(DEFAULT_NAME, DEFAULT_AGE, DEFAULT_FACULTY);
         long idFromDB = studentDao.insert(expectedStudent);
 //        System.out.println(idFromDB);
         Student actualStudent = studentDao.findById(idFromDB);
@@ -40,7 +41,7 @@ public class StudentJdbcDaoImplTest {
 
     @Test
     public void shouldHaveCorrectMethodUpdate() {
-        Student expectedStudent = new Student(FIRST_ID, DEFAULT_NAME, DEFAULT_AGE);
+        Student expectedStudent = new Student(FIRST_ID, DEFAULT_NAME, DEFAULT_AGE, DEFAULT_FACULTY);
         studentDao.update(expectedStudent);
 
         Student actualStudent = studentDao.findById(FIRST_ID);
