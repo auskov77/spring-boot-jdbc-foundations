@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.itsjava.domain.Student;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JdbcTest
@@ -28,12 +29,13 @@ public class StudentJdbcDaoImplTest {
 
     @Test
     public void shouldHaveCorrectMethodInsert() {
-        Student expectedStudent = new Student(NEW_ID, DEFAULT_NAME, DEFAULT_AGE);
-        studentDao.insert(expectedStudent);
+        Student expectedStudent = new Student(DEFAULT_NAME, DEFAULT_AGE);
+        long idFromDB = studentDao.insert(expectedStudent);
+//        System.out.println(idFromDB);
+        Student actualStudent = studentDao.findById(idFromDB);
 
-        Student actualStudent = studentDao.findById(NEW_ID);
-
-        assertEquals(actualStudent, expectedStudent);
+        assertAll(() -> assertEquals(actualStudent.getFio(), expectedStudent.getFio()),
+                () -> assertEquals(actualStudent.getAge(), expectedStudent.getAge()));
     }
 
     @Test

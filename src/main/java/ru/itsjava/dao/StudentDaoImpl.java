@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.itsjava.domain.Student;
 
@@ -24,9 +27,11 @@ public class StudentDaoImpl implements StudentDao{
     }
 
     @Override
-    public void insert(Student student) {
+    public long insert(Student student) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         Map<String, Object> params = Map.of("fio", student.getFio(), "age", student.getAge());
-        jdbc.update("INSERT INTO students(fio, age) VALUES (:fio, :age)", params);
+        jdbc.update("INSERT INTO students(fio, age) VALUES (:fio, :age)", new MapSqlParameterSource(params), keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
